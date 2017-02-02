@@ -4,9 +4,10 @@ import net.aionstudios.sorttest.algorithm.BozoSort;
 
 public class Sort {
 
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		BozoSort bs = new BozoSort();
-		if(args.length > 0 && args[0]!="help" && args[0]!="?"){
+		if(args.length > 0){
 			for(int i = 0; i < args.length;i++){
 				args[i] = args[i].toLowerCase();
 			}

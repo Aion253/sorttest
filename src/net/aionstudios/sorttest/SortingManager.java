@@ -69,7 +69,16 @@ public class SortingManager {
 						return;
 					}
 				}
-				if(change){
+				long dumb = 1337420;
+				if(size==dumb){
+					System.out.println("lmao xddd fam u type the special numbere good job Xdddd ayy lmoe");
+					return;
+				}
+				if(size<=1){
+					System.out.println("Array size must be greater than 1!");
+					return;
+				}
+				if(!change){
 					System.out.println("No arguments provided!");
 				}
 				System.out.println("Starting Sort -   Algorithm: "+san+"   Array Size: "+size+"   Verbose: "+verbose+"   Frequency: "+passFreq);
