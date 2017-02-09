@@ -7,7 +7,7 @@ public class SortingManager {
 	
 	private static List<SortingAlgorithm> alg = new ArrayList<SortingAlgorithm>();
 	
-	public static final void addAlg(SortingAlgorithm add){
+	public static void addAlg(SortingAlgorithm add){
 		for(SortingAlgorithm s : alg){
 			if(s.getName()==add.getName()){
 				return;
@@ -16,11 +16,11 @@ public class SortingManager {
 		alg.add(add);
 	}
 	
-	public static final List<SortingAlgorithm> getAlgs() {
+	public static List<SortingAlgorithm> getAlgs() {
 		return alg;
 	}
 
-	public static final void runAlgorithm(String san, String[] args){
+	public static void runAlgorithm(String san, String[] args){
 		SortingAlgorithm sa = null;
 		for(SortingAlgorithm s : alg){
 			if(s.getName().equals(san)){

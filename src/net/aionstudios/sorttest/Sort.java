@@ -17,7 +17,7 @@ public class Sort {
 		}
 	}
 	
-	public static final void printHelp(){
+	public static void printHelp(){
 		System.out.println("Aion Studios Sort Test help:");
 		System.out.println("  - 'help' or '?' for Help.");
 		System.out.println("  Sorting Algorithms Available:");

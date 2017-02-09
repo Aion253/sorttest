@@ -20,11 +20,11 @@ public abstract class SortingAlgorithm {
 		SortingManager.addAlg(this);
 	}
 
-	public final String getName() {
+	public String getName() {
 		return name;
 	}
 
-	public final String getDesc() {
+	public String getDesc() {
 		return desc;
 	}
 	
