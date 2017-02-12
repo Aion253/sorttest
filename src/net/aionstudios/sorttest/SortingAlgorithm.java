@@ -11,6 +11,7 @@ public abstract class SortingAlgorithm {
 	private String name;
 	private String desc;
 	private int[] finished;
+	private int[] a;
 	private boolean started = false;
 	private long passes = 0;
 	private long lastPasses = 0;
@@ -50,6 +51,7 @@ public abstract class SortingAlgorithm {
 		for (int i = 0; i < list.size(); i++) {
 		    array[i] = list.get(i);
 		}
+		a = array;
 		long start = System.currentTimeMillis()-1000;
 		long elapsed = 0;
 		long lastElapsed = 0;
@@ -65,23 +67,24 @@ public abstract class SortingAlgorithm {
 
 					@Override
 					public void run() {
-						parallelSort(array);
+						parallelSort();
 						es.shutdown();
 					}
 					
 				});
 			}
-			sort(array, verbose, passFreq, start, elapsed, lastElapsed);
+			sort(verbose, passFreq, start, elapsed, lastElapsed);
 			es.shutdown();
 		} else {
-			sort(array, verbose, passFreq, start, elapsed, lastElapsed);
+			sort(verbose, passFreq, start, elapsed, lastElapsed);
 		}
 	}
 	
-	private final void sort(int[] a, boolean verbose, long passFreq, long start, long elapsed, long lastElapsed){
+	private final void sort(boolean verbose, long passFreq, long start, long elapsed, long lastElapsed){
 		if(passFreq<1000){
 			passFreq=1000;
 		}
+		started = true;
 		if(verbose){
 			while(!isSorted(a)&&!solved){
 				a = sortingPass(a);
@@ -96,7 +99,6 @@ public abstract class SortingAlgorithm {
 					System.out.println("  Total Time: "+elapsed);
 					System.out.println("  Total Passes: "+passes);
 				}
-				started = true;
 			}
 			if(passes!=0&&elapsed!=0){
 				System.out.println("Sorting '"+this.getName()+"' completed in "+elapsed/1000+" seconds");
@@ -113,7 +115,6 @@ public abstract class SortingAlgorithm {
 				passes++;
 				elapsed=System.currentTimeMillis()-start;
 				lastElapsed = elapsed-lastElapsed;
-				started = true;
 			}
 			if(passes!=0){
 				System.out.println("Sorting '"+this.getName()+"' completed in "+elapsed/1000+" seconds");
@@ -132,7 +133,7 @@ public abstract class SortingAlgorithm {
 	 * @param a
 	 * @param passes
 	 */
-	private final void parallelSort(int[] a){
+	private final void parallelSort(){
 		while(!started){}
 		while(!isSorted(a)&&!solved){
 			a = sortingPass(a);
