@@ -3,11 +3,18 @@ package net.aionstudios.sorttest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public abstract class SortingAlgorithm {
 	
 	private String name;
 	private String desc;
+	private int[] finished;
+	private boolean started = false;
+	private long passes = 0;
+	private long lastPasses = 0;
+	private boolean solved;
 
 	public SortingAlgorithm(String name){
 		this.name = name;
@@ -28,7 +35,7 @@ public abstract class SortingAlgorithm {
 		return desc;
 	}
 	
-	public final void sortCall(int arraySize, boolean verbose, long passFreq){
+	public final void sortCall(int arraySize, boolean verbose, long passFreq, boolean parallel){
 		List<Integer> list = new ArrayList<Integer>();
 		for (int i = 1; i < arraySize+1; i++) {
 		    list.add(i);
@@ -42,20 +49,36 @@ public abstract class SortingAlgorithm {
 		for (int i = 0; i < list.size(); i++) {
 		    array[i] = list.get(i);
 		}
-		sort(array, verbose, passFreq);
-	}
-	
-	private final void sort(int[] a, boolean verbose, long passFreq){
-		if(passFreq<1000){
-			passFreq=1000;
-		}
-		long passes = 0;
 		long start = System.currentTimeMillis()-1000;
 		long elapsed = 0;
 		long lastElapsed = 0;
-		long lastPasses = 0;
+		if(parallel){
+			int processors = Runtime.getRuntime().availableProcessors();
+			ExecutorService es = Executors.newFixedThreadPool(processors-1);
+			for(int i = 0; i < processors-1; i++){
+				es.submit( new Runnable(){
+
+					@Override
+					public void run() {
+						parallelSort(array);
+						es.shutdown();
+					}
+					
+				});
+			}
+			sort(array, verbose, passFreq, start, elapsed, lastElapsed);
+			es.shutdown();
+		} else {
+			sort(array, verbose, passFreq, start, elapsed, lastElapsed);
+		}
+	}
+	
+	private final void sort(int[] a, boolean verbose, long passFreq, long start, long elapsed, long lastElapsed){
+		if(passFreq<1000){
+			passFreq=1000;
+		}
 		if(verbose){
-			while(!isSorted(a)){
+			while(!isSorted(a)&&!solved){
 				a = sortingPass(a);
 				passes++;
 				lastPasses++;
@@ -68,6 +91,7 @@ public abstract class SortingAlgorithm {
 					System.out.println("  Total Time: "+elapsed);
 					System.out.println("  Total Passes: "+passes);
 				}
+				started = true;
 			}
 			if(passes!=0&&elapsed!=0){
 				System.out.println("Sorting '"+this.getName()+"' completed in "+elapsed/1000+" seconds");
@@ -79,11 +103,12 @@ public abstract class SortingAlgorithm {
 				System.out.println("    - Try passing a larger array argument like '-a 100'");
 			}
 		} else {
-			while(!isSorted(a)){
+			while(!isSorted(a)&&!solved){
 				a = sortingPass(a);
 				passes++;
 				elapsed=System.currentTimeMillis()-start;
 				lastElapsed = elapsed-lastElapsed;
+				started = true;
 			}
 			if(passes!=0){
 				System.out.println("Sorting '"+this.getName()+"' completed in "+elapsed/1000+" seconds");
@@ -97,15 +122,35 @@ public abstract class SortingAlgorithm {
 		}
 	}
 	
+	/**
+	 * An simplified sorting method created for multi-threaded sorting where possible
+	 * @param a
+	 * @param passes
+	 */
+	private final void parallelSort(int[] a){
+		while(!started){}
+		while(!isSorted(a)&&!solved){
+			a = sortingPass(a);
+			passes++;
+			lastPasses++;
+		}
+	}
+	
 	private final boolean isSorted(int[] a) {
 		for(int i = 1; i < a.length;i++){
 			if(!(a[i]>a[i-1])){
 				return false;
 			}
 		}
+		solved = true;
+		finished = a;
 		return true;
 	}
 	
+	public int[] getFinished() {
+		return finished;
+	}
+
 	/**
 	 * This method should make one pass to rearrange the array and then return the next pass of the sorted array.
 	 * 

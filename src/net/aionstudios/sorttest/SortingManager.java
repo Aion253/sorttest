@@ -34,6 +34,7 @@ public class SortingManager {
 		} else {
 			boolean change = false;
 			boolean verbose = false;
+			boolean parallel = false;
 			int size = 25;
 			long passFreq = 2000;
 			if(!args[1].equals("help")&&!args[1].equals("desc")&&!args[1].equals("?")){
@@ -63,6 +64,9 @@ public class SortingManager {
 					} else if (args[i].equals("-v")){
 						verbose = true;
 						change = true;
+					} else if (args[i].equals("-p")){
+						parallel = true;
+						change = true;
 					} else if (!args[i].equals("")||!args[i].equals(null)){
 						System.out.println("Invalid command arguments: '"+args[i]+"'");
 						System.out.println("Use the argument 'help' for help.");
@@ -82,7 +86,7 @@ public class SortingManager {
 					System.out.println("No arguments provided!");
 				}
 				System.out.println("Starting Sort -   Algorithm: "+san+"   Array Size: "+size+"   Verbose: "+verbose+"   Frequency: "+passFreq);
-				sa.sortCall(size, verbose, passFreq);
+				sa.sortCall(size, verbose, passFreq, parallel);
 			} else {
 				System.out.println("Desc for '"+san+"': "+sa.getDesc());
 				return;

@@ -28,6 +28,7 @@ public class Sort {
 		System.out.println("    - '-a' - Specifies the size of the array.");
 		System.out.println("    - '-v' - Specifies the sort be verbose.");
 		System.out.println("    - '-f' - How often (milliseconds) to print verbose information.");
+		System.out.println("    - '-p' - Uses parallel processing to increase sorting speed.");
 	}
 
 }
