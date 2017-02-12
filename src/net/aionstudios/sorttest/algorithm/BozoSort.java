@@ -8,6 +8,7 @@ public class BozoSort extends SortingAlgorithm {
 
 	public BozoSort() {
 		super("bozo", "Randomly switches 2 points in the array, mostly for stress testing.");
+		enableParallel();
 	}
 
 	@Override

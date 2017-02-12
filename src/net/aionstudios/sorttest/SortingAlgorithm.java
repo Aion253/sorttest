@@ -15,6 +15,7 @@ public abstract class SortingAlgorithm {
 	private long passes = 0;
 	private long lastPasses = 0;
 	private boolean solved;
+	private boolean canParallel = true;
 
 	public SortingAlgorithm(String name){
 		this.name = name;
@@ -52,7 +53,11 @@ public abstract class SortingAlgorithm {
 		long start = System.currentTimeMillis()-1000;
 		long elapsed = 0;
 		long lastElapsed = 0;
-		if(parallel){
+		if(parallel&&!canParallel){
+			System.out.println("This sorting algorithm does not support parallel processing.");
+			System.out.println("Sorting will occur on a single processor.");
+		}
+		if(parallel&&canParallel){
 			int processors = Runtime.getRuntime().availableProcessors();
 			ExecutorService es = Executors.newFixedThreadPool(processors-1);
 			for(int i = 0; i < processors-1; i++){
@@ -149,6 +154,14 @@ public abstract class SortingAlgorithm {
 	
 	public int[] getFinished() {
 		return finished;
+	}
+	
+	public void enableParallel(){
+		canParallel = true;
+	}
+	
+	public void disableParallel(){
+		canParallel = false;
 	}
 
 	/**
