@@ -15,7 +15,6 @@ public abstract class SortingAlgorithm {
 	private long passes = 0;
 	private long lastPasses = 0;
 	private boolean solved;
-	private boolean canParallel = true;
 
 	public SortingAlgorithm(String name){
 		this.name = name;
@@ -152,14 +151,6 @@ public abstract class SortingAlgorithm {
 		return finished;
 	}
 
-	public void disableParallel(){
-		canParallel = false;
-	}
-	
-	public void enableParallel(){
-		canParallel = true;
-	}
-	
 	/**
 	 * This method should make one pass to rearrange the array and then return the next pass of the sorted array.
 	 * 
