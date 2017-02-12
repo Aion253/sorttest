@@ -52,8 +52,6 @@ public abstract class SortingAlgorithm {
 		}
 		a = array;
 		long start = System.currentTimeMillis()-1000;
-		int elapsed = 0;
-		int lastElapsed = 0;
 		if(parallel&&!canParallel){
 			System.out.println("This sorting algorithm does not support parallel processing.");
 			System.out.println("Sorting will occur on a single processor.");
@@ -72,10 +70,10 @@ public abstract class SortingAlgorithm {
 					
 				});
 			}
-			sort(verbose, passFreq, start, elapsed, lastElapsed);
+			sort(verbose, passFreq, start, 0, passFreq);
 			es.shutdown();
 		} else {
-			sort(verbose, passFreq, start, elapsed, lastElapsed);
+			sort(verbose, passFreq, start, 0, passFreq);
 		}
 	}
 	
@@ -112,9 +110,8 @@ public abstract class SortingAlgorithm {
 			while(!isSorted(a)&&!solved){
 				a = sortingPass(a);
 				passes++;
-				elapsed=(int) (System.currentTimeMillis()-start);
-				lastElapsed = elapsed-lastElapsed;
 			}
+			elapsed=(int) (System.currentTimeMillis()-start);
 			if(passes!=0){
 				System.out.println("Sorting '"+this.getName()+"' completed in "+elapsed/1000+" seconds");
 				System.out.println("  Array length: "+a.length+" ints.");
