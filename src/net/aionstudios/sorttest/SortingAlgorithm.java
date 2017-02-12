@@ -10,11 +10,10 @@ public abstract class SortingAlgorithm {
 	
 	private String name;
 	private String desc;
-	private int[] finished;
 	private int[] a;
 	private boolean started = false;
 	private long passes = 0;
-	private long lastPasses = 0;
+	private int lastPasses = 0;
 	private boolean solved;
 	private boolean canParallel = true;
 
@@ -37,7 +36,7 @@ public abstract class SortingAlgorithm {
 		return desc;
 	}
 	
-	public final void sortCall(int arraySize, boolean verbose, long passFreq, boolean parallel){
+	public final void sortCall(int arraySize, boolean verbose, int passFreq, boolean parallel){
 		List<Integer> list = new ArrayList<Integer>();
 		for (int i = 1; i < arraySize+1; i++) {
 		    list.add(i);
@@ -53,8 +52,8 @@ public abstract class SortingAlgorithm {
 		}
 		a = array;
 		long start = System.currentTimeMillis()-1000;
-		long elapsed = 0;
-		long lastElapsed = 0;
+		int elapsed = 0;
+		int lastElapsed = 0;
 		if(parallel&&!canParallel){
 			System.out.println("This sorting algorithm does not support parallel processing.");
 			System.out.println("Sorting will occur on a single processor.");
@@ -80,7 +79,7 @@ public abstract class SortingAlgorithm {
 		}
 	}
 	
-	private final void sort(boolean verbose, long passFreq, long start, long elapsed, long lastElapsed){
+	private final void sort(boolean verbose, int passFreq, long start, int elapsed, int lastElapsed){
 		if(passFreq<1000){
 			passFreq=1000;
 		}
@@ -90,7 +89,7 @@ public abstract class SortingAlgorithm {
 				a = sortingPass(a);
 				passes++;
 				lastPasses++;
-				elapsed=System.currentTimeMillis()-start;
+				elapsed= (int) (System.currentTimeMillis()-start);
 				if(elapsed>=lastElapsed){
 					lastElapsed=elapsed+passFreq;
 					System.out.println("A rotation has completed: "+passFreq+" milliseconds have passed!");
@@ -113,7 +112,7 @@ public abstract class SortingAlgorithm {
 			while(!isSorted(a)&&!solved){
 				a = sortingPass(a);
 				passes++;
-				elapsed=System.currentTimeMillis()-start;
+				elapsed=(int) (System.currentTimeMillis()-start);
 				lastElapsed = elapsed-lastElapsed;
 			}
 			if(passes!=0){
@@ -135,10 +134,16 @@ public abstract class SortingAlgorithm {
 	 */
 	private final void parallelSort(){
 		while(!started){}
+		int pass = 0;
 		while(!isSorted(a)&&!solved){
 			a = sortingPass(a);
-			passes++;
-			lastPasses++;
+			pass++;
+			if(pass>10000){
+				//to reduce some parallel overhead
+				passes+=pass;
+				lastPasses+=pass;
+				pass = 0;
+			}
 		}
 	}
 	
@@ -149,12 +154,7 @@ public abstract class SortingAlgorithm {
 			}
 		}
 		solved = true;
-		finished = a;
 		return true;
-	}
-	
-	public int[] getFinished() {
-		return finished;
 	}
 	
 	public void enableParallel(){

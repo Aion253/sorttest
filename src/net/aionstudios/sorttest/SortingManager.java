@@ -36,7 +36,7 @@ public class SortingManager {
 			boolean verbose = false;
 			boolean parallel = false;
 			int size = 25;
-			long passFreq = 2000;
+			int passFreq = 2000;
 			if(!args[1].equals("help")&&!args[1].equals("desc")&&!args[1].equals("?")){
 				for(int i = 1; i < args.length;i++){
 					if(args[i].equals("-a")){
