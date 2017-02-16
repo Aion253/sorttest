@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class SortingAlgorithm {
 	
@@ -16,15 +17,18 @@ public abstract class SortingAlgorithm {
 	private int lastPasses = 0;
 	private boolean solved;
 	private boolean canParallel = true;
+	private ReentrantLock lock;
 
 	public SortingAlgorithm(String name){
 		this.name = name;
+		lock = new ReentrantLock();
 		SortingManager.addAlg(this);
 	}
 	
 	public SortingAlgorithm(String name, String desc){
 		this.name = name;
 		this.desc = desc;
+		lock = new ReentrantLock();
 		SortingManager.addAlg(this);
 	}
 
@@ -36,7 +40,7 @@ public abstract class SortingAlgorithm {
 		return desc;
 	}
 	
-	public final void sortCall(int arraySize, boolean verbose, int passFreq, boolean parallel){
+	public final void sortCall(int arraySize, boolean verbose, int passFreq, boolean parallel, boolean half){
 		List<Integer> list = new ArrayList<Integer>();
 		for (int i = 1; i < arraySize+1; i++) {
 		    list.add(i);
@@ -58,6 +62,9 @@ public abstract class SortingAlgorithm {
 		}
 		if(parallel&&canParallel){
 			int processors = Runtime.getRuntime().availableProcessors();
+			if(half){
+				processors = processors / 2;
+			}
 			ExecutorService es = Executors.newFixedThreadPool(processors-1);
 			for(int i = 0; i < processors-1; i++){
 				es.submit( new Runnable(){
@@ -84,7 +91,9 @@ public abstract class SortingAlgorithm {
 		started = true;
 		if(verbose){
 			while(!isSorted(a)&&!solved){
+				lock.lock();
 				a = sortingPass(a);
+				lock.unlock();
 				passes++;
 				lastPasses++;
 				elapsed= (int) (System.currentTimeMillis()-start);
@@ -108,7 +117,9 @@ public abstract class SortingAlgorithm {
 			}
 		} else {
 			while(!isSorted(a)&&!solved){
+				lock.lock();
 				a = sortingPass(a);
+				lock.unlock();
 				passes++;
 			}
 			elapsed=(int) (System.currentTimeMillis()-start);
@@ -133,7 +144,9 @@ public abstract class SortingAlgorithm {
 		while(!started){}
 		int pass = 0;
 		while(!isSorted(a)&&!solved){
+			lock.lock();
 			a = sortingPass(a);
+			lock.unlock();
 			pass++;
 			if(pass>10000){
 				//to reduce some parallel overhead
