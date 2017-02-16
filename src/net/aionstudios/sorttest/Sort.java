@@ -2,7 +2,6 @@ package net.aionstudios.sorttest;
 
 import net.aionstudios.sorttest.algorithm.BozoSort;
 import net.aionstudios.sorttest.algorithm.Bubble;
-import net.aionstudios.sorttest.algorithm.QuickSort;
 
 public class Sort {
 
