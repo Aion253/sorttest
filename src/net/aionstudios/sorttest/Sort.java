@@ -1,14 +1,14 @@
 package net.aionstudios.sorttest;
 
 import net.aionstudios.sorttest.algorithm.BozoSort;
-import net.aionstudios.sorttest.algorithm.Bubble;
+import net.aionstudios.sorttest.algorithm.Cocktail;
 
 public class Sort {
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		BozoSort bs = new BozoSort();
-		Bubble bu = new Bubble();
+		Cocktail ct = new Cocktail();
 		if(args.length > 0){
 			for(int i = 0; i < args.length;i++){
 				args[i] = args[i].toLowerCase();

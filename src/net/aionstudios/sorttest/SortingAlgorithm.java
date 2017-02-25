@@ -1,6 +1,7 @@
 package net.aionstudios.sorttest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -13,7 +14,7 @@ public abstract class SortingAlgorithm {
 	private String desc;
 	private int[] a;
 	private boolean started = false;
-	private long passes = 0;
+	protected long passes = 0;
 	private int lastPasses = 0;
 	private boolean solved;
 	private boolean canParallel = true;
@@ -104,6 +105,7 @@ public abstract class SortingAlgorithm {
 					lastPasses=0;
 					System.out.println("  Total Time: "+elapsed);
 					System.out.println("  Total Passes: "+passes);
+					System.out.println(Arrays.toString(a));
 				}
 			}
 			if(passes!=0&&elapsed!=0){

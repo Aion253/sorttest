@@ -4,13 +4,13 @@ import java.util.Arrays;
 
 import net.aionstudios.sorttest.SortingAlgorithm;
 
-public class Bubble extends SortingAlgorithm {
+public class Cocktail extends SortingAlgorithm {
 	
 	private int last = 0;
 	private boolean up = true;
 
-	public Bubble() {
-		super("bubble", "Swaps the number if the latter is of grater value than the former.");
+	public Cocktail() {
+		super("cocktail", "Swaps the number if the latter is of grater value than the former.");
 		enableParallel();
 	}
 
