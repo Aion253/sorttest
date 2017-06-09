@@ -22,6 +22,12 @@ public class SortingManager {
 
 	public static void runAlgorithm(String san, String[] args){
 		SortingAlgorithm sa = null;
+		if (san.equals("-b")) {
+			san = "bozo";
+			args = new String[2];
+			args[0] = san;
+			args[1] = "-b";
+		}
 		for(SortingAlgorithm s : alg){
 			if(s.getName().equals(san)){
 				sa = s;
@@ -36,11 +42,25 @@ public class SortingManager {
 			boolean verbose = false;
 			boolean parallel = false;
 			boolean half = false;
+			boolean timeout = false;
+			boolean benchmark = false;
 			int size = 25;
+			long timeot = 0;
 			int passFreq = 2000;
 			if(!args[1].equals("help")&&!args[1].equals("desc")&&!args[1].equals("?")){
 				for(int i = 1; i < args.length;i++){
-					if(args[i].equals("-a")){
+					if(args[i].equals("-t")) {
+						try {
+							int i2 = Integer.parseInt(args[i+1]);
+							timeot = i2;
+							i++;
+							timeout = true;
+						} catch(NumberFormatException e){
+							System.out.println("Argument following the -t tag must be a number!");
+							System.out.println("Use the argument 'help' for help.");
+							return;
+						}
+					} else if(args[i].equals("-a")){
 						try {
 							int i2 = Integer.parseInt(args[i+1]);
 							size = i2;
@@ -51,7 +71,14 @@ public class SortingManager {
 							System.out.println("Use the argument 'help' for help.");
 							return;
 						}
-					} else if(args[i].equals("-f")){
+					} else if (args[i].equals("-b")) {
+						//placement prevents non-negotiable settings from changing.
+						benchmark = true;
+						timeout = true;
+						System.out.println("Initializing a benchmark with default settings.");
+						System.out.println("Benchmarks default to one core. Use -p to test on all cores if you haven't.");
+						change = true;
+					}else if(args[i].equals("-f")){
 						try {
 							int i2 = Integer.parseInt(args[i+1]);
 							passFreq = i2;
@@ -89,8 +116,13 @@ public class SortingManager {
 				if(!change){
 					System.out.println("No arguments provided!");
 				}
-				System.out.println("Starting Sort -   Algorithm: "+san+"   Array Size: "+size+"   Verbose: "+verbose+"   Frequency: "+passFreq);
-				sa.sortCall(size, verbose, passFreq, parallel, half);
+				if(benchmark) {
+					System.out.println("Starting Benchmark Sort -   Algorithm: "+san+"   Array Size: "+1000+"   Verbose: "+verbose+"   Frequency: "+passFreq+"   Timeout: "+900000);
+					sa.sortCall(25, true, passFreq, parallel, half, 900000, true);
+				} else {
+					System.out.println("Starting Sort -   Algorithm: "+san+"   Array Size: "+size+"   Verbose: "+verbose+"   Frequency: "+passFreq+"   Timeout: "+timeot);
+					sa.sortCall(size, verbose, passFreq, parallel, half, timeot, false);
+				}
 			} else {
 				System.out.println("Desc for '"+san+"': "+sa.getDesc());
 				return;

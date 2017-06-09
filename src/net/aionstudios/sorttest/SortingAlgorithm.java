@@ -41,7 +41,7 @@ public abstract class SortingAlgorithm {
 		return desc;
 	}
 	
-	public final void sortCall(int arraySize, boolean verbose, int passFreq, boolean parallel, boolean half){
+	public final void sortCall(int arraySize, boolean verbose, int passFreq, boolean parallel, boolean half, long timeout, boolean bench){
 		List<Integer> list = new ArrayList<Integer>();
 		for (int i = 1; i < arraySize+1; i++) {
 		    list.add(i);
@@ -78,14 +78,14 @@ public abstract class SortingAlgorithm {
 					
 				});
 			}
-			sort(verbose, passFreq, start, 0, passFreq);
+			sort(verbose, passFreq, start, 0, passFreq, timeout, bench);
 			es.shutdown();
 		} else {
-			sort(verbose, passFreq, start, 0, passFreq);
+			sort(verbose, passFreq, start, 0, passFreq, timeout, bench);
 		}
 	}
 	
-	private final void sort(boolean verbose, int passFreq, long start, int elapsed, int lastElapsed){
+	private final void sort(boolean verbose, int passFreq, long start, int elapsed, int lastElapsed, long timeout, boolean bench){
 		if(passFreq<1000){
 			passFreq=1000;
 		}
@@ -105,11 +105,17 @@ public abstract class SortingAlgorithm {
 					lastPasses=0;
 					System.out.println("  Total Time: "+elapsed);
 					System.out.println("  Total Passes: "+passes);
-					System.out.println(Arrays.toString(a));
+				}
+				if(elapsed>=timeout&&timeout!=0) {
+					break;
 				}
 			}
 			if(passes!=0&&elapsed!=0){
-				System.out.println("Sorting '"+this.getName()+"' completed in "+elapsed/1000+" seconds");
+				if(bench) {
+					System.out.println("Benchmark completed in "+elapsed/1000+" seconds");
+				} else {
+					System.out.println("Sorting '"+this.getName()+"' completed in "+elapsed/1000+" seconds");
+				}
 				System.out.println("  Array length: "+a.length+" ints.");
 				System.out.println("  Total Passes: "+passes);
 				System.out.println("  Avg passes/sec: "+passes/((elapsed)/1000));
@@ -117,6 +123,7 @@ public abstract class SortingAlgorithm {
 				System.out.println("  0 passes or no time :C, the array was sorted so quickly it couldn't be measured!");
 				System.out.println("    - Try passing a larger array argument like '-a 100'");
 			}
+			System.out.println(Arrays.toString(a));
 		} else {
 			while(!isSorted(a)&&!solved){
 				lock.lock();
@@ -126,7 +133,11 @@ public abstract class SortingAlgorithm {
 			}
 			elapsed=(int) (System.currentTimeMillis()-start);
 			if(passes!=0){
-				System.out.println("Sorting '"+this.getName()+"' completed in "+elapsed/1000+" seconds");
+				if(bench) {
+					System.out.println("Benchmark completed in "+elapsed/1000+" seconds");
+				} else {
+					System.out.println("Sorting '"+this.getName()+"' completed in "+elapsed/1000+" seconds");
+				}
 				System.out.println("  Array length: "+a.length+" ints.");
 				System.out.println("  Total Passes: "+passes);
 				System.out.println("  Avg passes/sec: "+passes/((elapsed)/1000));
@@ -134,13 +145,12 @@ public abstract class SortingAlgorithm {
 				System.out.println("  0 passes :C, the array was sorted so quickly it couldn't be measured!");
 				System.out.println("    - Try passing a larger array argument like '-a 100'");
 			}
+			System.out.println(Arrays.toString(a));
 		}
 	}
 	
 	/**
 	 * An simplified sorting method created for multi-threaded sorting where possible
-	 * @param a
-	 * @param passes
 	 */
 	private final void parallelSort(){
 		while(!started){}
