@@ -24,9 +24,13 @@ public class SortingManager {
 		SortingAlgorithm sa = null;
 		if (san.equals("-b")) {
 			san = "bozo";
-			args = new String[2];
+			String[] args2 = args;
+			args = new String[1+args.length];
 			args[0] = san;
 			args[1] = "-b";
+			for(int i = 2; i <= args2.length; i++) {
+				args[i] = args2[i-1];
+			}
 		}
 		for(SortingAlgorithm s : alg){
 			if(s.getName().equals(san)){
@@ -42,7 +46,6 @@ public class SortingManager {
 			boolean verbose = false;
 			boolean parallel = false;
 			boolean half = false;
-			boolean timeout = false;
 			boolean benchmark = false;
 			int size = 25;
 			long timeot = 0;
@@ -54,7 +57,6 @@ public class SortingManager {
 							int i2 = Integer.parseInt(args[i+1]);
 							timeot = i2;
 							i++;
-							timeout = true;
 						} catch(NumberFormatException e){
 							System.out.println("Argument following the -t tag must be a number!");
 							System.out.println("Use the argument 'help' for help.");
@@ -74,7 +76,6 @@ public class SortingManager {
 					} else if (args[i].equals("-b")) {
 						//placement prevents non-negotiable settings from changing.
 						benchmark = true;
-						timeout = true;
 						System.out.println("Initializing a benchmark with default settings.");
 						System.out.println("Benchmarks default to one core. Use -p to test on all cores if you haven't.");
 						change = true;
@@ -117,10 +118,10 @@ public class SortingManager {
 					System.out.println("No arguments provided!");
 				}
 				if(benchmark) {
-					System.out.println("Starting Benchmark Sort -   Algorithm: "+san+"   Array Size: "+1000+"   Verbose: "+verbose+"   Frequency: "+passFreq+"   Timeout: "+900000);
-					sa.sortCall(25, true, passFreq, parallel, half, 900000, true);
+					System.out.println("Starting Benchmark Sort -   Algorithm: "+san+"   Array Size: "+1000+"   Verbose: "+verbose+"   Frequency: "+passFreq+"   Timeout: "+600000+"   Parallel: "+parallel+"   Half-Parallel: "+half);
+					sa.sortCall(1000, verbose, passFreq, parallel, half, 600000, true);
 				} else {
-					System.out.println("Starting Sort -   Algorithm: "+san+"   Array Size: "+size+"   Verbose: "+verbose+"   Frequency: "+passFreq+"   Timeout: "+timeot);
+					System.out.println("Starting Sort -   Algorithm: "+san+"   Array Size: "+size+"   Verbose: "+verbose+"   Frequency: "+passFreq+"   Timeout: "+timeot+"   Parallel: "+parallel+"   Half-Parallel: "+half);
 					sa.sortCall(size, verbose, passFreq, parallel, half, timeot, false);
 				}
 			} else {

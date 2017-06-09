@@ -1,7 +1,5 @@
 package net.aionstudios.sorttest.algorithm;
 
-import java.util.Arrays;
-
 import net.aionstudios.sorttest.SortingAlgorithm;
 
 public class Cocktail extends SortingAlgorithm {

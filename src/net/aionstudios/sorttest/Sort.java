@@ -28,11 +28,14 @@ public class Sort {
 		}
 		System.out.println("  Algorithm Arguments:");
 		System.out.println("    - '-a' - Specifies the size of the array.");
+		System.out.println("    - '-b' - Starts a 'bozo' sort as a benchmark. Array size 1000.");
+		System.out.println("             - Suggested arguments are '-b -p -v'");
 		System.out.println("    - '-v' - Specifies the sort be verbose.");
 		System.out.println("    - '-f' - How often (milliseconds) to print verbose information.");
 		System.out.println("    - '-p' - Uses parallel processing to increase sorting speed.");
 		System.out.println("    - '-h' - Specifies that the amount of threads used in parallel processing should be halved.");
 		System.out.println("             - May improve performance on hyperthreaded instances.");
+		System.out.println("");
 	}
 
 }
