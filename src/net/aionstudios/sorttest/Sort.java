@@ -13,7 +13,11 @@ public class Sort {
 			for(int i = 0; i < args.length;i++){
 				args[i] = args[i].toLowerCase();
 			}
-			SortingManager.runAlgorithm(args[0], args);
+			if (args[0].equals("help")||args[0].equals("?")) {
+				printHelp();
+			} else {
+				SortingManager.runAlgorithm(args[0], args);
+			}
 		} else {
 			printHelp();
 		}
@@ -21,7 +25,7 @@ public class Sort {
 	
 	public static void printHelp(){
 		System.out.println("Aion Studios Sort Test help:");
-		System.out.println("  - 'help' or '?' for Help.");
+		System.out.println("  - 'help' or '?' for help.");
 		System.out.println("  Sorting Algorithms Available:");
 		for(SortingAlgorithm sa : SortingManager.getAlgs()){
 			System.out.println("    - '"+sa.getName()+"' - "+sa.getDesc());

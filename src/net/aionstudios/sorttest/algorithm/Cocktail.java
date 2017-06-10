@@ -8,7 +8,7 @@ public class Cocktail extends SortingAlgorithm {
 	private boolean up = true;
 
 	public Cocktail() {
-		super("cocktail", "Swaps the number if the latter is of grater value than the former.");
+		super("cocktail", "Swaps two array values if the latter is of greater value than the former.");
 		enableParallel();
 	}
 

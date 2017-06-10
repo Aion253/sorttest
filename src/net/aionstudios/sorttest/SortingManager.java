@@ -49,7 +49,7 @@ public class SortingManager {
 			boolean benchmark = false;
 			int size = 25;
 			long timeot = 0;
-			int passFreq = 2000;
+			int passFreq = 1000;
 			if(!args[1].equals("help")&&!args[1].equals("desc")&&!args[1].equals("?")){
 				for(int i = 1; i < args.length;i++){
 					if(args[i].equals("-t")) {

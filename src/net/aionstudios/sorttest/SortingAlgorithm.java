@@ -123,7 +123,7 @@ public abstract class SortingAlgorithm {
 				System.out.println("  0 passes or no time :C, the array was sorted so quickly it couldn't be measured!");
 				System.out.println("    - Try passing a larger array argument like '-a 100'");
 			}
-			System.out.println(Arrays.toString(a));
+			System.exit(0);
 		} else {
 			while(!isSorted(a)&&!solved){
 				lock.lock();
@@ -145,7 +145,7 @@ public abstract class SortingAlgorithm {
 				System.out.println("  0 passes :C, the array was sorted so quickly it couldn't be measured!");
 				System.out.println("    - Try passing a larger array argument like '-a 100'");
 			}
-			System.out.println(Arrays.toString(a));
+			System.exit(0);
 		}
 	}
 	
